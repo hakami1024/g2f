@@ -3,6 +3,7 @@ var allowlistPages = {};
 var origin_site, origin_page;
 var filterOn = false;
 var xpathDocText = '//*[not(self::script or self::style)]/text()[normalize-space(.) != ""]';
+const DEBUG = false;
 
 console.log("Guys2Folks V1.0 Ready");
 
@@ -23,10 +24,9 @@ function retrieveSettings(xpathDocText, node) {
             });
         });
     } catch(e){
-        // if (e.message.includes('Extension context invalidated')) {
-        // } else {
+        if(DEBUG) {
             console.log(e);
-        // }
+        }
     }
 }
 
@@ -47,10 +47,9 @@ function loadSettings() {
             });
         });
     } catch(e){
-        // if (e.message.includes('Extension context invalidated')) {
-        // } else {
+        if(DEBUG){
             console.log(e);
-        // }
+        }
     }
 }
 
@@ -63,7 +62,9 @@ function mutationObserver() {
     // When DOM is modified, remove 'guys' from inserted node
     var observer = new MutationObserver(function (mutations) {
         mutations.forEach(function (mutation) {
-            // console.log(mutation);
+            // if(DEBUG){
+                // console.log(mutation);
+            // }
             checkNode(mutation);
         });
     });
@@ -103,8 +104,8 @@ function filterWords(xpathExpression, node) {
         null
     );
 
-    if (evalResult.snapshotLength > 0) {
-        console.log('in filterWords');
+    if (evalResult.snapshotLength > 0 && DEBUG) {
+        // console.log('in filterWords');
         if (node.tagName in nodeTypes) {
             nodeTypes[node.tagName]++;
         } else {
@@ -114,7 +115,7 @@ function filterWords(xpathExpression, node) {
 
     for (let i = 0; i < evalResult.snapshotLength; i++) {
         let textNode = evalResult.snapshotItem(i);
-        console.log(textNode.data);
+        // if(DEBUG) console.log(textNode.data);
         textNode.data = replaceText(textNode.data);
     }
 }
@@ -122,9 +123,24 @@ function filterWords(xpathExpression, node) {
 function checkNode(mutation) {
     mutation.addedNodes.forEach(function (node) {
         if (!isForbiddenNode(node)) {
-            // console.log(node);
-            // console.log(node.tagName);
-            // console.log(node.className);
+            // if(DEBUG) {
+                // console.log(node);
+                // console.log(node.tagName);
+                // console.log(node.className);
+                // console.log(node.parentNode);
+                // if(node.parentNode){
+                //     console.log(node.parentNode.attributes);
+                //     console.log(node.parentNode.parentNode);
+                //     if(node.parentNode.parentNode){
+                //         console.log(node.parentNode.parentNode.attributes);
+                //         if(node.parentNode.parentNode.parentNode){
+                //             console.log(node.parentNode.parentNode.parentNode);
+                //             console.log(node.parentNode.parentNode.parentNode.attributes);
+                //             console.log(node.parentNode.parentNode.parentNode.parentNode);
+                //         }
+                //     }
+                // }
+            // }
             if(allowlistSites === {}){
                 retrieveSettings(xpathDocText, node);
             } else {
@@ -140,6 +156,20 @@ function svgInParents(node, depth=7){
     while(i<depth && curNode){
         let tag = curNode.tagName ? curNode.tagName.toLowerCase() : "";
         if(tag === "svg" || tag === "g" || tag === "path"){
+            return true;
+        }
+        i++;
+        curNode = curNode.parentNode;
+    }
+    return false;
+}
+
+function formInParents(node, depth=4){
+    let i = 0;
+    curNode = node.parentNode;
+    while(i<depth && curNode){
+        let tag = curNode.tagName ? curNode.tagName.toLowerCase() : "";
+        if(tag === "form"){
             return true;
         }
         i++;
@@ -165,8 +195,9 @@ function isForbiddenNode(node) {
         (origin_site.includes("facebook.com") && ( // processing facebook popups (touching them leads to some coursor focus quirk)
             (node.style && node.style.position === "fixed") ||
             (node.classList && node.classList.contains("uiContextualLayerPositioner")) ||
-            (node.attributes && node.attributes['role'] && node.attributes['role'].value === 'option')
-        )) ||
+            (node.attributes && node.attributes['role'] && node.attributes['role'].value === 'option') ||
+            formInParents(node))
+        ) ||
         svgInParents(node);
 }
 
