@@ -3,7 +3,7 @@
     "name": "Guys2Folks",
     "version": "0.1.0",
     "icons": {"128": "images/icon.png"},
-    "description": "Guys2Folks automatically changes \"guys\" (or \"guyz\") to \"folks\" preserving case. Guys2Folks does not limit your freedom:\n- can be switched off in any particular site or page;\n- does not interfere when you type;\n- is open source: https://github.com/hakami1024/g2f",
+    "description": "Folks everywhere!",
     "background": {
         "scripts": ["eventPage.js"],
         "persistent": false
