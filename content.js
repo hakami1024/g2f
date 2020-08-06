@@ -163,8 +163,8 @@ function isForbiddenNode(node) {
                 node.tagName.toLowerCase() === 'link' ||
                 node.tagName.toLowerCase() === 'img') ||
         (origin_site.includes("facebook.com") && ( // processing facebook popups (touching them leads to some coursor focus quirk)
-            node.style && node.style.position === "fixed" ||
-            node.className.includes("uiContextualLayerPositioner") ||
+            (node.style && node.style.position === "fixed") ||
+            (node.classList && node.classList.contains("uiContextualLayerPositioner")) ||
             (node.attributes && node.attributes['role'] && node.attributes['role'].value === 'option')
         )) ||
         svgInParents(node);
