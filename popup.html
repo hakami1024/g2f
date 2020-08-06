@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="assets/css/popup.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/button.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <title>Guys2Folks</title>
+</head>
+<body tabindex="1">
+<div>
+    <img src="images/icon.png" width="30px" height="40px" style="vertical-align:middle"/>
+    <h2 style="text-align: center; vertical-align: middle; display: inline-block; padding-left: 10px">Guys2Folks</h2>
+</div>
+<hr width="300px">
+<div>
+    <div style="display: inline-block; vertical-align: middle;">
+        <h3 style="display: inline-block; margin: 0px;">In this site:</h3>
+        <p id="current_site" style=" margin: 0px;"></p>
+    </div>
+    <div class="onoffswitch" style="display: inline-block; vertical-align: middle; float: right;">
+        <label class="switch" for="notification">
+            <input id="notification" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"/>
+            <span class="slider round"></span>
+        </label>
+    </div>
+</div>
+<br/>
+<div>
+    <div style="display: inline-block; vertical-align: middle;">
+        <h3 style="display: inline-block; margin: 0px;">In this page:</h3>
+        <p id="current_page"
+           style="margin: 0px; max-width: 220px; max-height: 1em; overflow: hidden; text-overflow: ellipsis; allow-space: nowrap;"></p>
+    </div>
+    <div class="onoffswitch" style="display: inline-block; vertical-align: middle; float: right;">
+        <label class="switch" for="notification_page">
+            <input id="notification_page" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"/>
+            <span id="notification_page_slider" class="slider round"></span>
+        </label>
+    </div>
+</div>
+
+<script type="text/javascript" src="assets/js/popup.js"></script>
+
+</body>
+</html>
