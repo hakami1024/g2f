@@ -1,5 +1,5 @@
 # Guys2Folks
-A chrome extension that changes "Folks" to "Folks" preserving case.  
+A chrome extension that changes "Guys" to "Folks" preserving case.  
 
 Guys2Folks does not limit your freedom:  
 - can be switched off in any particular site or page;  
