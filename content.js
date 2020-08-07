@@ -72,10 +72,10 @@ function mutationObserver() {
     observer.observe(document, observerConfig);
 }
 
-function replaceText(text) {
+function replaceText(textNode) {
     var wordRegex = new RegExp("\\bguy(s|z)\\b", 'gi');
-    if(wordRegex.test(text) === true){
-        text = text.replace(wordRegex, function (match) {
+    if(wordRegex.test(textNode.data) === true){
+        textNode.data = textNode.data.replace(wordRegex, function (match) {
             if(match === match.toLowerCase()){
                 return "folks";
             } else if(match === match.toUpperCase() ){
@@ -86,7 +86,6 @@ function replaceText(text) {
             return "folks";
         });
     }
-    return text
 }
 
 var nodeTypes = {};
@@ -105,7 +104,7 @@ function filterWords(xpathExpression, node) {
     );
 
     if (evalResult.snapshotLength > 0 && DEBUG) {
-        // console.log('in filterWords');
+        console.log('in filterWords');
         if (node.tagName in nodeTypes) {
             nodeTypes[node.tagName]++;
         } else {
@@ -116,7 +115,7 @@ function filterWords(xpathExpression, node) {
     for (let i = 0; i < evalResult.snapshotLength; i++) {
         let textNode = evalResult.snapshotItem(i);
         // if(DEBUG) console.log(textNode.data);
-        textNode.data = replaceText(textNode.data);
+        replaceText(textNode);
     }
 }
 
@@ -125,11 +124,13 @@ function checkNode(mutation) {
         if (!isForbiddenNode(node)) {
             // if(DEBUG) {
                 // console.log(node);
+                // console.log(node.isContentEditable);
                 // console.log(node.tagName);
                 // console.log(node.className);
                 // console.log(node.parentNode);
                 // if(node.parentNode){
-                //     console.log(node.parentNode.attributes);
+                    // console.log(node.parentNode.attributes);
+                    // console.log(node.parentNode.className);
                 //     console.log(node.parentNode.parentNode);
                 //     if(node.parentNode.parentNode){
                 //         console.log(node.parentNode.parentNode.attributes);
@@ -179,11 +180,12 @@ function formInParents(node, depth=4){
 }
 
 function isForbiddenNode(node) {
-    return node.isContentEditable || // DraftJS and many others
+    return node.isContentEditable ||
         !node.tagName ||
-        (node.parentNode && node.parentNode.isContentEditable) || // Special case for Gmail
-        (node.tagName.toLowerCase() === "textarea" || // Some catch-alls
+        (node.parentNode && node.parentNode.isContentEditable) ||
+        (node.tagName.toLowerCase() === "textarea" ||
                 node.tagName.toLowerCase() === "input" ||
+                node.tagName.toLowerCase() === "button" ||
                 node.tagName.toLowerCase() === "script" ||
                 node.tagName.toLowerCase() === "style" ||
                 node.tagName.toLowerCase() === 'svg' ||
@@ -192,13 +194,9 @@ function isForbiddenNode(node) {
                 node.tagName.toLowerCase() === 'grammarly-extension' ||
                 node.tagName.toLowerCase() === 'link' ||
                 node.tagName.toLowerCase() === 'img') ||
-        (origin_site.includes("facebook.com") && ( // processing facebook popups (touching them leads to some coursor focus quirk)
-            (node.style && node.style.position === "fixed") ||
-            (node.classList && node.classList.contains("uiContextualLayerPositioner")) ||
-            (node.attributes && node.attributes['role'] && node.attributes['role'].value === 'option') ||
-            formInParents(node))
-        ) ||
-        svgInParents(node);
+        svgInParents(node) ||
+        (node.attributes && node.attributes['contenteditable'] && node.attributes['contenteditable'] === 'true') ||
+        formInParents(node);
 }
 
 loadSettings();
