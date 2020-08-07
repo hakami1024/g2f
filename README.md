@@ -12,9 +12,9 @@ Thanks to doradomiguel35, whose open-source [Profanity-Filter-Chrome-Extension](
 To be published on Google Extensions 
   
 ### Installation (Development)
-Clone repository
-Open Chrome
-Go to chrome://extensions/
-Toggle on Developer Mode
-Click "Load unpacked"
-Load cloned repository
+Clone repository  
+Open Chrome  
+Go to chrome://extensions/  
+Toggle on Developer Mode  
+Click "Load unpacked"  
+Load cloned repository  
